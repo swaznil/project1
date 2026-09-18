@@ -29,8 +29,8 @@ export function Loading({ label = "Loading…" }: { label?: string }) {
   );
 }
 export function Empty({
-  title = "Room for your next idea.",
-  description = "No projects here yet. Share something you’ve built and get the conversation started.",
+  title = "No projects yet.",
+  description = "Published projects will appear here.",
   create = true,
 }: {
   title?: string;

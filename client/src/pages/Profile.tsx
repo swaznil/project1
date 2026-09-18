@@ -58,11 +58,8 @@ export function Profile() {
             </Link>
           )}
         </div>
-        <span className="eyebrow">STUDENT BUILDER</span>
         <h1>{person.name}</h1>
-        <p className="profile-bio">
-          {person.bio || "Building, learning, and sharing along the way."}
-        </p>
+        {person.bio && <p className="profile-bio">{person.bio}</p>}
         <div className="profile-links">
           {person.githubUrl && (
             <a href={person.githubUrl} target="_blank" rel="noreferrer">
@@ -108,7 +105,6 @@ export function Profile() {
         <h2>
           Projects <span>{person.projectCount}</span>
         </h2>
-        <span className="results-caption">Ideas made real.</span>
       </div>
       {projects.error ? (
         <ErrorMessage message={projects.error} />
@@ -129,7 +125,7 @@ export function Profile() {
         </>
       ) : (
         <Empty
-          title="The next build is on its way."
+          title="No projects yet."
           description="Published projects will appear here."
           create={user?.id === person.id}
         />
@@ -164,9 +160,8 @@ export function ProfileEditor() {
         Back to profile
       </Link>
       <div className="page-heading">
-        <span className="eyebrow">THE PERSON BEHIND THE PROJECTS</span>
-        <h1>A little about you.</h1>
-        <p>Make your corner of ProjectHub feel like home.</p>
+        <h1>Edit profile</h1>
+        <p>Update the information shown on your public profile.</p>
       </div>
       <form
         className="form-stack form-section"

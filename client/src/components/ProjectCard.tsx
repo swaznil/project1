@@ -25,7 +25,6 @@ export function ProjectCard({ project }: { project: Project }) {
           <div className="project-monogram">
             <Code2 size={24} />
             <span>{project.title}</span>
-            <small>{project.category}</small>
           </div>
         )}
         <span className="cover-open">
@@ -35,7 +34,7 @@ export function ProjectCard({ project }: { project: Project }) {
       <div className="project-card-body">
         <div className="card-eyebrow">
           {project.category}
-          <span>SEM {project.semester}</span>
+          <span>semester {project.semester}</span>
         </div>
         <Link to={`/projects/${project.id}`} className="project-title">
           {project.title}

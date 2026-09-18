@@ -5,7 +5,6 @@ import {
   Github,
   Pencil,
   Trash2,
-  Calendar,
   Code2,
 } from "lucide-react";
 import { useState } from "react";
@@ -57,7 +56,7 @@ export function ProjectDetails() {
       <header className="project-heading">
         <div>
           <span className="eyebrow">
-            {project.category} <span className="muted">/</span> SEMESTER{" "}
+            {project.category} <span className="muted">/</span> Semester{" "}
             {project.semester}
           </span>
           <h1>{project.title}</h1>
@@ -154,7 +153,6 @@ export function ProjectDetails() {
             </div>
           )}
           <section className="description-section">
-            <span className="section-kicker">THE IDEA, BROUGHT TO LIFE</span>
             <h2>About this project</h2>
             <p className="project-description">{project.description}</p>
           </section>
@@ -211,7 +209,7 @@ export function ProjectDetails() {
             )}
           </div>
           <section>
-            <span className="section-kicker">BUILT WITH</span>
+            <span className="section-kicker">Built with</span>
             <div className="tags large-tags">
               {project.technologies.length ? (
                 project.technologies.map((t) => (
@@ -228,7 +226,7 @@ export function ProjectDetails() {
             </div>
           </section>
           <section className="project-meta">
-            <span className="section-kicker">PROJECT DETAILS</span>
+            <span className="section-kicker">Project details</span>
             <dl>
               <dt>Category</dt>
               <dd>{project.category}</dd>
@@ -243,10 +241,6 @@ export function ProjectDetails() {
                 })}
               </dd>
             </dl>
-            <small>
-              <Calendar size={13} />
-              Every project is a step forward.
-            </small>
           </section>
           {project.githubUrl && <RepositoryInfo url={project.githubUrl} />}
         </aside>

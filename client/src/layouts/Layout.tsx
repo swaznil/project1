@@ -7,8 +7,10 @@ import { ErrorMessage } from "../components/Feedback";
 export function Logo() {
   return (
     <Link className="logo" to="/" aria-label="ProjectHub home">
-      <img src="/favicon.svg" alt="" />
-      Project<span>Hub</span>
+      <span className="logo-mark" aria-hidden="true">
+        P/H
+      </span>
+      <span className="logo-type">ProjectHub</span>
     </Link>
   );
 }
@@ -30,6 +32,7 @@ export function Layout() {
   }
   return (
     <>
+      <a className="skip-link" href="#main-content">Skip to content</a>
       <header className="site-header">
         <div className="header-inner">
           <Logo />
@@ -66,7 +69,7 @@ export function Layout() {
                 Log in <ArrowUpRight size={14} />
               </Link>
             )}
-            <Link className="button primary" to="/projects/new">
+            <Link className="button primary" to="/projects/new" aria-label="Share a project">
               <Plus size={17} />
               <span>Share a project</span>
             </Link>
@@ -78,16 +81,9 @@ export function Layout() {
           <ErrorMessage message={error} />
         </div>
       )}
-      <main>
+      <main id="main-content">
         <Outlet />
       </main>
-      <footer className="site-footer">
-        <span>
-          ProjectHub <span className="muted">/</span> Made by students. Built
-          for what’s next.
-        </span>
-        <span>A little curiosity goes a long way.</span>
-      </footer>
     </>
   );
 }

@@ -1,21 +1,11 @@
-import { useState, useEffect } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
+  Clock3,
   Search,
   SlidersHorizontal,
-  LayoutGrid,
-  Sparkles,
-  Code2,
-  Smartphone,
-  Cpu,
-  ShieldCheck,
-  ChartNoAxesCombined,
-  Gamepad2,
-  Shapes,
-  ArrowUpRight,
-  X,
-  Clock3,
   TrendingUp,
+  X,
 } from "lucide-react";
 import { api } from "../api";
 import { categories } from "../types";
@@ -24,16 +14,7 @@ import { useAuth } from "../hooks/useAuth";
 import { ProjectCard } from "../components/ProjectCard";
 import { Empty, ErrorMessage } from "../components/Feedback";
 import { Pagination } from "../components/Pagination";
-const icons = [
-  Sparkles,
-  Code2,
-  Smartphone,
-  Cpu,
-  ShieldCheck,
-  ChartNoAxesCombined,
-  Gamepad2,
-  Shapes,
-];
+
 export function Discover() {
   const [params, setParams] = useSearchParams();
   const [search, setSearch] = useState(params.get("search") || "");
@@ -44,7 +25,9 @@ export function Discover() {
     [query, user?.id],
   );
   const options = useLoad((signal) => api.options(signal), []);
+
   useEffect(() => setSearch(params.get("search") || ""), [query]);
+
   function change(key: string, value: string) {
     const next = new URLSearchParams(params);
     if (value) next.set(key, value);
@@ -52,252 +35,205 @@ export function Discover() {
     if (key !== "page") next.delete("page");
     setParams(next);
   }
+
   const category = params.get("category") || "";
   const sort = params.get("sort") || "recent";
   const filtered = ["search", "category", "technology", "semester"].some(
     (key) => params.has(key),
   );
+
   return (
     <div className="discover-layout container">
-      <aside className="discover-sidebar">
-        <span className="overline">THE STUDENT SHOWCASE</span>
-        <h2>Find your inspiration.</h2>
-        <div className="sidebar-divider" />
-        <span className="sidebar-label">EXPLORE</span>
+      <header className="discover-intro">
+        <div className="intro-copy">
+          <h1>Discover what students are building.</h1>
+          <p>Projects, demos, and source code from student builders.</p>
+        </div>
+      </header>
+
+      <form
+        className="search-box"
+        onSubmit={(event) => {
+          event.preventDefault();
+          change("search", search.trim());
+        }}
+      >
+        <Search size={21} />
+        <input
+          aria-label="Search projects"
+          placeholder="Search by project, idea, or technology"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+        {search && (
+          <button
+            type="button"
+            className="icon-button"
+            aria-label="Clear search"
+            onClick={() => {
+              setSearch("");
+              change("search", "");
+            }}
+          >
+            <X size={17} />
+          </button>
+        )}
+        <button type="submit" className="search-submit">
+          Search <span aria-hidden="true">↵</span>
+        </button>
+      </form>
+
+      <nav className="category-strip" aria-label="Project categories">
         <button
-          className={`category-button ${!category ? "active" : ""}`}
+          className={!category ? "active" : ""}
+          aria-pressed={!category}
           onClick={() => change("category", "")}
         >
-          <LayoutGrid size={17} />
-          All projects{!category && <span className="active-dot" />}
+          All
         </button>
-        {categories.map((name, i) => {
-          const Icon = icons[i];
-          return (
-            <button
-              key={name}
-              onClick={() => change("category", name)}
-              className={`category-button ${category === name ? "active" : ""}`}
-            >
-              <Icon size={17} />
-              {name === "AI / Machine Learning"
-                ? "AI & Machine Learning"
-                : name}
-              {category === name && <span className="active-dot" />}
-            </button>
-          );
-        })}
-        <div className="sidebar-note">
-          <span className="note-icon">
-            <Code2 size={20} />
-          </span>
-          <h3>
-            From your laptop.
-            <br />
-            To the world.
-          </h3>
-          <p>Your side project could be someone else’s inspiration.</p>
-          <Link to="/projects/new">
-            Put it out there <ArrowUpRight size={16} />
-          </Link>
-        </div>
-        <span className="sidebar-bottom">
-          SMALL PROJECTS. BIG POSSIBILITIES.
-        </span>
-      </aside>
-      <section className="discover-main">
-        <div className="discover-intro">
-          <div>
-            <span className="eyebrow">
-              <span />A SPACE FOR STUDENT BUILDERS
-            </span>
-            <h1>
-              Discover what students
-              <br />
-              are <span>building.</span>
-            </h1>
-            <p>
-              Fresh ideas, late-night builds, and a whole lot of curiosity.
-              <br className="desktop-break" /> Explore projects from the next
-              generation of developers.
-            </p>
-          </div>
-          <div className="intro-mark" aria-hidden="true">
-            <Code2 size={48} strokeWidth={1.4} />
-            <span>idea → reality</span>
-          </div>
-        </div>
-        <form
-          className="search-box"
-          onSubmit={(event) => {
-            event.preventDefault();
-            change("search", search.trim());
-          }}
-        >
-          <Search size={20} />
-          <input
-            aria-label="Search projects"
-            placeholder="Search projects, technologies, or ideas…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          {search && (
-            <button
-              type="button"
-              className="icon-button"
-              aria-label="Clear search"
-              onClick={() => {
-                setSearch("");
-                change("search", "");
-              }}
-            >
-              <X size={16} />
-            </button>
-          )}
-          <button type="submit" className="search-submit">
-            Search <span>↵</span>
-          </button>
-        </form>
-        <div className="mobile-categories">
-          <select
-            aria-label="Category"
-            value={category}
-            onChange={(e) => change("category", e.target.value)}
+        {categories.map((name) => (
+          <button
+            key={name}
+            className={category === name ? "active" : ""}
+            aria-pressed={category === name}
+            onClick={() => change("category", name)}
           >
-            <option value="">All categories</option>
-            {categories.map((c) => (
-              <option key={c}>{c}</option>
+            {name.replace(" / Machine Learning", "")}
+          </button>
+        ))}
+      </nav>
+
+      <div className="mobile-categories">
+        <select
+          aria-label="Category"
+          value={category}
+          onChange={(event) => change("category", event.target.value)}
+        >
+          <option value="">All categories</option>
+          {categories.map((name) => (
+            <option key={name}>{name}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="discovery-toolbar">
+        <div className="sort-tabs" aria-label="Sort projects">
+          <button
+            className={sort === "recent" ? "selected" : ""}
+            aria-pressed={sort === "recent"}
+            onClick={() => change("sort", "recent")}
+          >
+            <Clock3 size={15} /> Newest
+          </button>
+          <button
+            className={sort === "popular" ? "selected" : ""}
+            aria-pressed={sort === "popular"}
+            onClick={() => change("sort", "popular")}
+          >
+            <TrendingUp size={15} /> Most liked
+          </button>
+        </div>
+        <div className="filter-controls">
+          <SlidersHorizontal size={16} aria-hidden="true" />
+          <select
+            aria-label="Technology filter"
+            value={params.get("technology") || ""}
+            onChange={(event) => change("technology", event.target.value)}
+          >
+            <option value="">Any technology</option>
+            {options.data?.technologies.map((technology) => (
+              <option key={technology.name}>{technology.name}</option>
+            ))}
+          </select>
+          <select
+            aria-label="Semester filter"
+            value={params.get("semester") || ""}
+            onChange={(event) => change("semester", event.target.value)}
+          >
+            <option value="">Any semester</option>
+            {Array.from({ length: 12 }, (_, index) => (
+              <option key={index} value={index + 1}>
+                Semester {index + 1}
+              </option>
             ))}
           </select>
         </div>
-        <div className="discovery-toolbar">
-          <div className="sort-tabs">
-            <button
-              className={sort === "recent" ? "selected" : ""}
-              onClick={() => change("sort", "recent")}
-            >
-              <Clock3 size={16} />
-              Recently added
-            </button>
-            <button
-              className={sort === "popular" ? "selected" : ""}
-              onClick={() => change("sort", "popular")}
-            >
-              <TrendingUp size={16} />
-              Popular
-            </button>
-          </div>
-          <div className="filter-controls">
-            <SlidersHorizontal size={15} />
-            <select
-              aria-label="Technology filter"
-              value={params.get("technology") || ""}
-              onChange={(e) => change("technology", e.target.value)}
-            >
-              <option value="">Technology</option>
-              {options.data?.technologies.map((t) => (
-                <option key={t.name}>{t.name}</option>
-              ))}
-            </select>
-            <select
-              aria-label="Semester filter"
-              value={params.get("semester") || ""}
-              onChange={(e) => change("semester", e.target.value)}
-            >
-              <option value="">Semester</option>
-              {Array.from({ length: 12 }, (_, i) => (
-                <option key={i} value={i + 1}>
-                  Semester {i + 1}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="results-heading">
-          <h2>
-            {category ||
-              (sort === "popular"
-                ? "Community favorites"
-                : "Fresh from the community")}
-            {data && <span>{data.total}</span>}
-          </h2>
-          {filtered ? (
-            <button
-              className="text-button"
-              onClick={() => {
-                setSearch("");
-                setParams({});
-              }}
-            >
-              Clear filters <X size={13} />
-            </button>
-          ) : (
-            <span className="results-caption">
-              Built with curiosity. Shared with you.
-            </span>
-          )}
-        </div>
-        {error ? (
-          <>
-            <ErrorMessage message={error} />
-            <button className="button secondary" onClick={reload}>
-              Try again
-            </button>
-          </>
-        ) : loading ? (
-          <div
-            className="project-grid"
-            aria-label="Loading projects"
-            aria-busy="true"
+      </div>
+
+      <div className="results-heading">
+        <h2>
+          {category || (sort === "popular" ? "Most liked" : "Latest work")}
+          {data && <span>{data.total}</span>}
+        </h2>
+        {filtered && (
+          <button
+            className="text-button"
+            onClick={() => {
+              setSearch("");
+              setParams({});
+            }}
           >
-            {[1, 2, 3, 4, 5, 6].map((n) => (
-              <div className="skeleton-card" key={n}>
-                <div />
-                <span />
-                <span />
-                <span />
-              </div>
+            Clear filters <X size={14} />
+          </button>
+        )}
+      </div>
+
+      {error ? (
+        <div className="request-state">
+          <ErrorMessage message={error} />
+          <button className="button secondary" onClick={reload}>
+            Try again
+          </button>
+        </div>
+      ) : loading ? (
+        <div
+          className="project-grid"
+          aria-label="Loading projects"
+          aria-busy="true"
+        >
+          {[1, 2, 3, 4, 5, 6].map((number) => (
+            <div className="skeleton-card" key={number}>
+              <div />
+              <span />
+              <span />
+            </div>
+          ))}
+        </div>
+      ) : data?.items.length ? (
+        <>
+          <div className="project-grid">
+            {data.items.map((project) => (
+              <ProjectCard
+                key={`${project.id}-${user?.id || "guest"}`}
+                project={project}
+              />
             ))}
           </div>
-        ) : data?.items.length ? (
-          <>
-            <div className="project-grid">
-              {data.items.map((p) => (
-                <ProjectCard
-                  key={`${p.id}-${user?.id || "guest"}`}
-                  project={p}
-                />
-              ))}
-            </div>
-            <Pagination
-              page={data.page}
-              pages={data.pages}
-              onChange={(p) => {
-                change("page", String(p));
-                window.scrollTo({ top: 250, behavior: "smooth" });
-              }}
-            />
-          </>
-        ) : (
-          <Empty
-            title={
-              filtered
-                ? "No projects match this search."
-                : "Every community starts with one project."
-            }
-            description={
-              filtered
-                ? "Try another keyword or clear a filter to find something new."
-                : "Built something for class, for fun, or just to see if you could? This is its home."
-            }
-            create={!filtered}
+          <Pagination
+            page={data.page}
+            pages={data.pages}
+            onChange={(page) => {
+              change("page", String(page));
+              window.scrollTo({ top: 300, behavior: "smooth" });
+            }}
           />
-        )}
-        <div className="discovery-footnote">
-          <span className="tiny-square" />
-          Not just assignments. A collection of what’s possible.
-        </div>
-      </section>
+        </>
+      ) : (
+        <Empty
+          title={
+            filtered
+              ? "No projects match this search."
+              : "Every community starts with one project."
+          }
+          description={
+            filtered
+              ? "Try a broader search or remove a filter."
+              : "Share the first project."
+          }
+          create={!filtered}
+        />
+      )}
+
     </div>
   );
 }

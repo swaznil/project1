@@ -12,6 +12,14 @@ async function register(
   email = "builder@example.com",
 ) {
   await page.goto("/register");
+  await expect(page.getByLabel("Full name")).toBeVisible();
+  await page.evaluate(() => document.fonts.ready);
+  if (email === "builder@example.com") {
+    await page.screenshot({
+      path: "test-results/register-desktop.png",
+      fullPage: true,
+    });
+  }
   await page.getByLabel("Full name").fill("Sam Student");
   await page.getByLabel("Email address").fill(email);
   await page.getByLabel("Password", { exact: true }).fill(password);
@@ -45,6 +53,10 @@ test("complete student journey with real API and database", async ({
   await register(page, request);
   await page.getByRole("link", { name: "Your profile" }).click();
   await page.getByRole("link", { name: "Edit profile" }).click();
+  await page.screenshot({
+    path: "test-results/profile-editor-desktop.png",
+    fullPage: true,
+  });
   await page
     .getByLabel("Bio")
     .fill("Student developer. Building useful things for campus.");
@@ -55,7 +67,15 @@ test("complete student journey with real API and database", async ({
   await expect(
     page.getByText("Student developer. Building useful things for campus."),
   ).toBeVisible();
+  await page.screenshot({
+    path: "test-results/profile-desktop.png",
+    fullPage: true,
+  });
   await page.getByRole("link", { name: "Share a project" }).first().click();
+  await page.screenshot({
+    path: "test-results/editor-desktop.png",
+    fullPage: true,
+  });
   await page.getByLabel("Project title").fill("Campus Atlas");
   await page
     .getByLabel("Project description")
@@ -72,13 +92,11 @@ test("complete student journey with real API and database", async ({
   await page.getByLabel("Live demo").fill("https://example.com");
   // Upload actual PNG bytes through the application's multipart endpoint.
   const screenshot = await page.screenshot();
-  await page
-    .getByLabel("Upload screenshots")
-    .setInputFiles({
-      name: "campus.png",
-      mimeType: "image/png",
-      buffer: screenshot,
-    });
+  await page.getByLabel("Upload screenshots").setInputFiles({
+    name: "campus.png",
+    mimeType: "image/png",
+    buffer: screenshot,
+  });
   await expect(page.getByText("Cover image", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Generate with AI" }).click();
   await expect(page.getByText("A little writing inspiration")).toBeVisible();
@@ -209,7 +227,7 @@ test("mobile discovery, empty state, auth and form have no horizontal overflow",
   await register(page, request, "mobile@example.com");
   await page.goto("/projects/new");
   await expect(
-    page.getByRole("heading", { name: "What have you been building?" }),
+    page.getByRole("heading", { name: "Share a project", exact: true }),
   ).toBeVisible();
   expect(
     await page.evaluate(

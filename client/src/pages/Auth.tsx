@@ -16,35 +16,30 @@ type Mode =
   "login" | "register" | "verify-email" | "forgot-password" | "reset-password";
 const copy: Record<
   Mode,
-  { eyebrow: string; title: string; description: string; button: string }
+  { title: string; description: string; button: string }
 > = {
   login: {
-    eyebrow: "GOOD TO SEE YOU AGAIN",
-    title: "Welcome back, builder.",
-    description: "Your next great project starts here.",
+    title: "Log in",
+    description: "Log in to publish and manage your projects.",
     button: "Log in",
   },
   register: {
-    eyebrow: "IDEAS BELONG OUT IN THE WORLD",
-    title: "Make yourself at home.",
-    description: "Join a community of students building something new.",
+    title: "Create your account",
+    description: "Show your work and find what other students are making.",
     button: "Create account",
   },
   "verify-email": {
-    eyebrow: "ONE LAST THING",
     title: "Check your inbox.",
     description:
       "Open the link we emailed you, then confirm your email below. Links expire after 30 minutes.",
     button: "Verify email",
   },
   "forgot-password": {
-    eyebrow: "LET’S GET YOU BACK IN",
     title: "Forgot your password?",
     description: "Enter your email and we’ll send you a password reset link.",
     button: "Send reset link",
   },
   "reset-password": {
-    eyebrow: "A FRESH START",
     title: "Choose a new password.",
     description: "Make it at least 10 characters and something only you know.",
     button: "Reset password",
@@ -122,25 +117,15 @@ export function AuthPage({ mode }: { mode: Mode }) {
         <div className="auth-glyph">
           <Code2 size={50} />
         </div>
-        <span className="overline">FOR THE THINGS YOU CAN’T WAIT TO BUILD</span>
         <h2>
-          A class project.
-          <br />A weekend idea.
-          <br />
-          <span>Your next chapter.</span>
+          Student projects,
+          <br />built to be seen.
         </h2>
         <p>
-          Give your work a place beyond your laptop.
-          <br />
-          Find inspiration. Share the process. Keep building.
+          Browse working demos, source code, and the people behind them.
         </p>
-        <div className="auth-aside-bottom">
-          <span className="tiny-square" />
-          MADE BY STUDENTS. BUILT FOR WHAT’S NEXT.
-        </div>
       </aside>
       <section className="auth-panel">
-        <span className="eyebrow">{c.eyebrow}</span>
         <h1>{c.title}</h1>
         <p className="form-intro">{c.description}</p>
         <ErrorMessage message={error} />
@@ -249,7 +234,7 @@ export function AuthPage({ mode }: { mode: Mode }) {
         <div className="auth-switch">
           {mode === "login" ? (
             <>
-              New to ProjectHub? <Link to="/register">Join the community</Link>
+              New to ProjectHub? <Link to="/register">Create an account</Link>
               <p>
                 <Link to="/verify-email">Need a verification email?</Link>
               </p>
@@ -261,9 +246,6 @@ export function AuthPage({ mode }: { mode: Mode }) {
           ) : (
             <Link to="/login">Back to login</Link>
           )}
-        </div>
-        <div className="auth-smallprint">
-          Your code has a home. Now your projects do, too.
         </div>
       </section>
     </div>

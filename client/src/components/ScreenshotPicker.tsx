@@ -72,10 +72,10 @@ export function ScreenshotPicker({
         <strong>
           {busy
             ? "Uploading your screenshots…"
-            : "Give your project a first impression"}
+            : "Upload screenshots"}
         </strong>
         <span>
-          Click to upload · PNG, JPG, WebP · 5 MB each · Up to 6 images
+          PNG, JPG, or WebP · 5 MB each · Up to 6 images
         </span>
       </button>
       <ErrorMessage message={error} />

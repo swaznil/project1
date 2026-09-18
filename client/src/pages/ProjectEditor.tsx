@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   ArrowUpRight,
   Sparkles,
+  Code2,
   X,
   Plus,
   Check,
@@ -149,23 +150,14 @@ export function ProjectEditor() {
         {id ? "Back to project" : "Back to discover"}
       </Link>
       <div className="page-heading">
-        <span className="eyebrow">YOUR WORK DESERVES TO BE SEEN</span>
-        <h1>{id ? "Make it even better." : "What have you been building?"}</h1>
-        <p>
-          {id
-            ? "Refine the details. Show how far your project has come."
-            : "From first experiments to final-year projects. There’s a place for it here."}
-        </p>
+        <h1>{id ? "Edit project" : "Share a project"}</h1>
+        <p>Your project will be public. You can edit it after publishing.</p>
       </div>
       <form className="editor-layout" onSubmit={(event) => void submit(event)}>
         <div className="editor-fields">
           <section className="form-section">
             <div className="section-title">
-              <span>01</span>
-              <div>
-                <h2>The essentials</h2>
-                <p>Help people understand your project at a glance.</p>
-              </div>
+              <h2>Project details</h2>
             </div>
             <label>
               Project title
@@ -238,7 +230,7 @@ export function ProjectEditor() {
             {suggestion && (
               <div className="ai-suggestion">
                 <strong>
-                  <Sparkles size={15} />A little writing inspiration
+                  <Sparkles size={15} />Suggested description
                 </strong>
                 <p>{suggestion}</p>
                 <div className="button-row">
@@ -267,11 +259,7 @@ export function ProjectEditor() {
           </section>
           <section className="form-section">
             <div className="section-title">
-              <span>02</span>
-              <div>
-                <h2>Show, don’t just tell</h2>
-                <p>A few screenshots help bring your idea to life.</p>
-              </div>
+              <h2>Screenshots</h2>
             </div>
             <ScreenshotPicker
               images={images}
@@ -281,11 +269,7 @@ export function ProjectEditor() {
           </section>
           <section className="form-section">
             <div className="section-title">
-              <span>03</span>
-              <div>
-                <h2>Under the hood</h2>
-                <p>The tools, code, and people that made it happen.</p>
-              </div>
+              <h2>Technologies & team</h2>
             </div>
             <label>
               Technologies
@@ -380,26 +364,35 @@ export function ProjectEditor() {
               <ArrowUpRight size={17} />
             </button>
           </div>
-        </div>
-        <aside className="editor-aside">
-          <span className="section-kicker">A GOOD SHOWCASE TELLS A STORY</span>
-          <h3>Make it yours.</h3>
-          <p>
-            You don’t need a perfect project. Just something you’re proud to
-            have built.
-          </p>
-          <ul>
-            <li>Explain the problem you’re solving.</li>
-            <li>Show the parts that make it special.</li>
-            <li>Give your teammates some credit.</li>
-            <li>Link your code so others can learn.</li>
-          </ul>
-          <div className="aside-divider" />
-          <small>
-            Your project will be public when you publish. You can edit it
-            anytime.
-          </small>
-        </aside>
+          </div>
+          <aside className="project-preview" aria-label="Project preview">
+            <h2>Project preview</h2>
+            <div className={`preview-cover tone-${data.semester % 4}`}>
+              {images[0] ? (
+                <img src={images[0].url} alt="Selected project cover" />
+              ) : (
+                <>
+                  <Code2 size={28} />
+                  <strong>{data.title.trim() || "Your project title"}</strong>
+                </>
+              )}
+            </div>
+            <div className="preview-meta">
+              <span>{data.category}</span>
+              <span>Semester {data.semester}</span>
+            </div>
+            <p>
+              {data.description.trim() ||
+                "Your project description will appear here as you write."}
+            </p>
+            {data.technologies.length > 0 && (
+              <div className="tags">
+                {data.technologies.slice(0, 5).map((name) => (
+                  <span key={name}>{name}</span>
+                ))}
+              </div>
+            )}
+          </aside>
       </form>
     </div>
   );

@@ -11,7 +11,7 @@ export function RepositoryInfo({ url }: { url: string }) {
     <div className="repository">
       <div className="section-kicker">
         <Github size={18} />
-        FROM THE REPOSITORY
+        From the repository
       </div>
       {loading ? (
         <Loading label="Loading GitHub information…" />
