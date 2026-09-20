@@ -1,58 +1,60 @@
 # ProjectHub
 
-A place to show people what you've been building.
+A spot for displaying people what you have been creating.
 
-ProjectHub is a student project showcase built for **Thirdspace**. It brings screenshots, source code, demos, and the people behind a project onto one page, so you can see what something does before digging into its repo.
+ProjectHub is a student project exhibit for **Thirdspace**. It aggregates screenshots, source code, demos and the people behind a project in a single page, to quickly see what something does before forking its repo.
 
-**Live demo:** `ADD_DEMO_URL` *(placeholder)*
+**Live demo:** `ADD_DEMO_URL` (placeholder)
 
 ## A look around
 
-Browse projects by category, technology, or semester.
+Use the categories, technology and semester filters to browse projects.
 
-![Project discovery with search, filters, and project cards](docs/screenshots/discover.png)
+![Project discovery with search, filters and project cards](docs/screenshots/discover.png)
 
-Add your project details and see a preview as you type.
+Type in your project information and preview as you type.
 
-![Project editor and live card preview](docs/screenshots/project-editor.png)
+The project editor updates the card preview as you type; no hovering is needed.
 
-These screenshots use sample projects from browser tests. A fresh database starts empty.
+![Project editor with live card preview](docs/screenshots/project-editor.png)
+
+The following screenshots were taken from sample projects in the browser tests. A new database is created bare.
 
 ## What it does
 
-- Publish, edit, and delete your own projects.
-- Upload up to six screenshots: PNG, JPEG, or WebP, up to 5 MB each.
-- Search projects and sort by newest or most liked.
-- Create a public profile, credit registered teammates, and like projects.
-- Show languages, stars, forks, and update dates from public GitHub repositories.
-- Register with email verification and recover forgotten passwords.
-- Optionally generate a description draft, review it, and edit it before publishing.
+Create, edit, and remove projects of your own.
+Upload up to 6 screenshots, PNG, JPEG or WebP, up to 5 MB per file.
+- Explore projects and filter by most recent or most popular.
+- Set a public profile, give credit to registered co-workers and like projects.
+Displays the languages, stars, forks and update dates of public GitHub repositories.
+Sign up with email verification and reset forgotten passwords by email.
+Optionally, create a draft of a description, review and edit it prior to publishing.
 
 ## How it's built
 
 | Part | Tools |
 | --- | --- |
-| Frontend | React 19, TypeScript, Vite, React Router |
-| Styling | Plain CSS, Lucide icons |
-| Backend | Node.js, Express 5, Zod |
+Frontend | React 19, TypeScript, Vite, React Router |
+Styling | Plain CSS, Lucide icons |
+Backend | Node.js, Express 5, TypeScript, Zod |
 | Database | PostgreSQL 17, Prisma 6 |
-| Accounts | JWT, bcryptjs, Nodemailer |
-| Integrations | Cloudinary, GitHub REST API, OpenAI |
-| Testing | Vitest, Supertest, Playwright |
+| Accounts | JWT for authentication, bcryptjs for password hashing, Nodemailer for sending emails |
+Integrations | Cloudinary, GitHub REST API, OpenAI |
+Testing | Vitest, Supertest, Playwright |
 
-The client and server are separate npm apps. Express routes pass requests through services and repositories, with Prisma handling database queries.
+The client and server are two separate npm applications. Requests are sent through services and repositories along express routes, and Prisma will deal with the database.
 
-A few implementation details matter: only owners can change projects, credited teammates don't get editing access, and the database allows one like per account per project. Browser tests check layouts at phone, tablet, and desktop sizes.
+Some implementation aspects are important: Only owners are allowed to change projects, credited teammates aren't allowed to edit, and the database permits one like per account per project. Browser tests validate layouts across phone, tablet and desktop.
 
 ## Run it locally
 
 ### 1. Prerequisites
 
-Install [Node.js](https://nodejs.org/) **22.12+**, [Git](https://git-scm.com/downloads), and [Docker](https://www.docker.com/products/docker-desktop/) with Compose and Linux containers enabled.
+Install [Node.js](https://nodejs.org/) 22.12+ with npm, Git, and Docker with Compose. Configure Docker to run Linux containers.
 
-You'll also need working SMTP credentials to complete email verification. The example below uses Gmail.
+Also, you need to have functional SMTP credentials for verification of emails. The following example assumes a set up using Gmail.
 
-### 2. Clone and start the database
+### 2. Clone the repository and start the database
 
 ```sh
 git clone https://github.com/swaznil/project1.git
@@ -61,11 +63,11 @@ docker compose up -d
 docker compose ps
 ```
 
-Wait for PostgreSQL to show as healthy. It runs on `localhost:5434`; Docker runs only the database.
+Wait until PostgreSQL is in the healthy state. It is located at localhost:5434 while Docker only runs the database.
 
 ### 3. Set up the backend
 
-From the repository root:
+To the repository root:
 
 ```sh
 cd server
@@ -75,7 +77,7 @@ npm run db:generate
 npm run db:deploy
 ```
 
-The setup script creates both `.env` files and generates JWT secrets without overwriting existing files. Database settings already match Docker Compose.
+Both the `.env` files are created and jwt secrets are generated in the setup script without overwriting files. Database settings are already configured to match Docker Compose.
 
 Edit `server/.env`:
 
@@ -87,9 +89,9 @@ SMTP_PASS=your-google-app-password
 SMTP_FROM=ProjectHub <your-email@gmail.com>
 ```
 
-Use a [Google app password](https://support.google.com/accounts/answer/185833), not your normal password. Keep `.env` files private.
+Do not use your normal password; use one of the Google app passwords. Don't put `.env` files in the source control.
 
-Still in `server/`, start the API:
+In the `server/` directory, run the API:
 
 ```sh
 npm run dev
@@ -99,7 +101,7 @@ Check [localhost:5000/api/v1/health](http://localhost:5000/api/v1/health).
 
 ### 4. Start the frontend
 
-Open another terminal **at the repository root**:
+Open another terminal at the root of the repository:
 
 ```sh
 cd client
@@ -107,38 +109,38 @@ npm ci
 npm run dev
 ```
 
-Visit **[localhost:5173](http://localhost:5173)**. Register, verify your email, log in, and choose **Share a project**.
+Visit **[localhost:5173](http://localhost:5173)**. Sign up, follow the email link and verify your account, log in, and select Share a project.
 
-Use `localhost` consistently. The generated client configuration uses `VITE_API_URL=/api/v1`; Vite proxies requests to port 5000.
+Use `localhost` consistently. The client config generated will include `VITE_API_URL=/api/v1`; Vite will forward requests to port 5000.
 
 ### Optional integrations
 
-Set these in `server/.env`, then restart the backend:
+Place these in `server/.env` and restart the backend:
 
 | Feature | Variables |
 | --- | --- |
-| Screenshots | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` |
-| AI drafts | `OPENAI_API_KEY`, optionally `OPENAI_MODEL` |
+| Screenshot uploads | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` |
+| AI drafts | `OPENAI_API_KEY`; optionally `OPENAI_MODEL` |
 | Higher GitHub API limits | `GITHUB_TOKEN` |
 
-Without these, you can still publish text-only projects and write descriptions yourself. Public GitHub lookups work without a token within the unauthenticated limit. AI requests may incur charges. Never put service secrets in `VITE_` variables.
+Without these, you can still publish text-only projects and write up the descriptions yourself. Within the unauthenticated limit it is possible to perform public GitHub lookups without the requirement of a token. AI requests are subject to fees. Never put service secrets in `VITE_` variables.
 
 ## Builds and tests
 
-Build the frontend from `client/`:
+Create frontend from client/:
 
 ```sh
 npm run build
 ```
 
-Output goes to `client/dist/`. Build and run the backend from `server/`:
+Files are output in `client/dist/`. Run/Compile the backend in `server/`:
 
 ```sh
 npm run build
 npm start
 ```
 
-With PostgreSQL running, prepare the test database and run backend checks from `server/`:
+Once PostgreSQL is running, create and migrate the test database, and perform the backend checks from `server/`:
 
 ```sh
 npm run db:test:setup
@@ -146,7 +148,7 @@ npm run typecheck
 npm test
 ```
 
-Then run browser checks from `client/`:
+Then run the browser checks from `client/`:
 
 ```sh
 npm run typecheck
@@ -154,13 +156,13 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Tests clear `projecthub_test`. Run the suites sequentially because they share it. Playwright starts its own servers on ports 5001 and 5174. External services are mocked; real email delivery and uploads need separate verification.
+Tests clear `projecthub_test`. Run the suites sequentially because they share it. Playwright starts its own servers on ports 5001 and 5174. External services are mocked; real email delivery and uploads need separate checks.
 
 ## Troubleshooting
 
-- **Database connection fails:** check `docker compose ps` and port 5434.
-- **No verification email:** fix SMTP settings, restart the backend, and request another verification email from the login screen.
-- **API requests fail:** check port 5000 and `VITE_API_URL=/api/v1`.
-- **Port 5173 is busy:** stop the conflicting process; Vite won't switch ports automatically.
+If the connection to the database fails, run `docker compose ps` to verify and check port 5434.
+- No verification email: Fix smtp settings, restart backend and request another verification email from login screen.
+- If API requests do not work: Verify port 5000 and ensure that `VITE_API_URL=/api/v1`.
+The port in question, "Port 5173", is taken by another process: stop the offending process; Vite will NOT automatically switch ports.
 
-Stop PostgreSQL with `docker compose down`. Data stays in its volume; adding `-v` deletes it.
+Stop PostgreSQL: `docker compose down`. Data remains inside of the volume; when you add the `-v` it will be deleted.
